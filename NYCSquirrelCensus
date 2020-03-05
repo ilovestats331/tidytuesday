@@ -23,7 +23,7 @@ squirrels_clean <- nyc_squirrels %>%
     -unique_squirrel_id, -hectare_squirrel_number, -combination_of_primary_and_highlight_color, -color_notes, -specific_location, -other_activities, -other_interactions, -lat_long
   )
 
-
+#plot the data
 squirrels_clean %>% 
 #select only the data that is relevant to the analysis; in this case, that is relevant to the squrrels' activities
   select(tail_flags, tail_twitches, running, chasing, eating, climbing, foraging, kuks, quaas, approaches, indifferent, runs_from) %>% 

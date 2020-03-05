@@ -1,3 +1,6 @@
+#load libraries
+library(tidyverse)
+
 #First need to tidy the data
 squirrels_clean <- nyc_squirrels %>%
 #rename variables with difficult names to make them easier to read & understand

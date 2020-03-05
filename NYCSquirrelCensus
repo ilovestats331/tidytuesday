@@ -1,0 +1,39 @@
+#First need to tidy the data
+squirrels_clean <- nyc_squirrels %>%
+#rename variables with difficult names to make them easier to read & understand
+  rename(
+    hectare_grid_id = `hectare`,
+    time_period = `shift`
+    ) %>% 
+#convert the variables into factors so to categorize the data and store it in levels
+  mutate(
+    hectare_grid_id = as.factor(hectare_grid_id),
+    time_period = as.factor(time_period),
+    primary_fur_color = as.factor(primary_fur_color),
+    highlight_fur_color = as.factor(highlight_fur_color),
+   zip_codes = as.factor(zip_codes),
+   community_districts = as.factor(community_districts),
+   borough_boundaries = as.factor(borough_boundaries),
+  city_council_districts = as.factor(city_council_districts),
+  police_precincts = as.factor(police_precincts),
+  date = as.factor(date)
+  ) %>% 
+#select only the data that is relevant to the analysis
+  select(
+    -unique_squirrel_id, -hectare_squirrel_number, -combination_of_primary_and_highlight_color, -color_notes, -specific_location, -other_activities, -other_interactions, -lat_long
+  )
+
+
+squirrels_clean %>% 
+#select only the data that is relevant to the analysis; in this case, that is relevant to the squrrels' activities
+  select(tail_flags, tail_twitches, running, chasing, eating, climbing, foraging, kuks, quaas, approaches, indifferent, runs_from) %>% 
+# pivoting longer to gather the specified data into columns so to be able to plot them
+  pivot_longer(running:runs_from, names_to = "Squirrel.Activity", values_to = "Doing.Activity") %>% 
+  group_by(Squirrel.Activity, Doing.Activity) %>% 
+#summarize to find the means of each activity
+  summarize(meanT = mean(tail_twitches), meanF = mean(tail_flags), meanTot = (meanT + meanF)) %>% 
+#plotting the data on a bar graph using ggplot()
+  ggplot() +
+  geom_bar(aes(x=Squirrel.Activity, y=meanTot, fill=Doing.Activity), stat = "identity", position ="dodge") +
+  ggtitle("Squirrels Twitching/Flagging Tail Based on What Else They're Observed Doing") +
+  ylab("Proportion Flagging/Twitching Tail")
